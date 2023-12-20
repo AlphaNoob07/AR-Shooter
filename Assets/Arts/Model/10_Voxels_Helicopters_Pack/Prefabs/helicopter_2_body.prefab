@@ -202,9 +202,6 @@ GameObject:
   - component: {fileID: 4080899850377880}
   - component: {fileID: 33445482249866884}
   - component: {fileID: 23097172558650776}
-  - component: {fileID: 2999932262962727444}
-  - component: {fileID: 8931265576222433394}
-  - component: {fileID: 7415567200435397348}
   m_Layer: 0
   m_Name: helicopter_2_body
   m_TagString: Untagged
@@ -280,63 +277,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2999932262962727444
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987970773263572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a6ce6be2fa3a3a4796fab02ff5b93f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyMode: 1
---- !u!114 &8931265576222433394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987970773263572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 384bbb72be6853d41b1c26fbd8a03862, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetPlayer: {fileID: 0}
-  targetPose: {fileID: 7568652230446000588}
-  flyingHeight: 5
-  minDistance: 15
-  maxDistance: 50
-  moveSpeed: 7
-  rotationSpeed: 2
-  waitTime: 0.1
-  currentWaitTime: 0
-  shootRange: 30
-  fireRate: 0.2
-  distanceToTarget: 15.882557
-  isShooting: 0
-  isLockingTarget: 0
---- !u!114 &7415567200435397348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987970773263572}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9020e3a04ba53704d88990585c2fcea8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 7312593549038407846, guid: db5284734490f7047bdd8a9ed73287cd, type: 3}
-  shootForce: 70
-  attackPointNumber: 0
-  attackPoints:
-  - {fileID: 8054129210760477016}
-  - {fileID: 364069220141549026}
 --- !u!1 &1453882502635489588
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,116 +2,122 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(EnemyGunScripts))]
+[RequireComponent(typeof(BoxCollider))]
 public class TankController : MonoBehaviour
 {
-    public Transform targetPlayer;
-    public Transform targetPose;
-    public float flyingHeight = 30f;
-    public float minDistance = 10f;
-    public float maxDistance = 20f;
-    public float moveSpeed = 5f;
-    public float rotationSpeed = 2f;
-    public float waitTime = 5f; // Time to wait before moving to a new random position
-    public float currentWaitTime = 0f;
-    public float shootRange = 15f; // Range to shoot at the target player
-    public float fireRate = 0.3f;
-    public float distanceToTarget;
-    public bool isShooting = false;
-    public bool isLockingTarget = false;
-    private Vector3 randomPosition;
+    [Header("Tank RequireComponent Porperties")]
+    private Rigidbody rb;
+    private EnemyGunScripts enemyGun;
+    private BoxCollider boxCollider;
 
+    [Header("Turrent Properties")]
+    [SerializeField] private Transform turrentTranform;
+    [SerializeField] private Transform turrentTarget;
 
-    private EnemyGunScripts _enemyGun;
+    [SerializeField] private float turrenLegSpeed =0.2f;
+
+    private Vector3 finalTurrentLookDir;
+
+    [Header("Tank Movement Properties")]
+    [SerializeField] private Transform targetPose;
+    [SerializeField] private float tankSpeed;
+    [SerializeField] private float tankTrunSpeed;
+
+    [SerializeField] private float maxDistance, minDistance;
+
+    [Header("Tank Fire Properties")]
+    [SerializeField] private float spread;
+    [SerializeField] private float shootRange;
+    [SerializeField] private float reloadTime, currentWaitTime;
+    [SerializeField] private bool isShooting;
+
     private void Awake()
     {
-        targetPose.transform.SetParent(null);
-        StartCoroutine(FlyRoutine());
+        enemyGun = GetComponent<EnemyGunScripts>();
+        rb = GetComponent<Rigidbody>();
+        boxCollider = GetComponent<BoxCollider>();
+        targetPose.SetParent(null);
 
-        if (_enemyGun == null)
-            _enemyGun = GetComponent<EnemyGunScripts>();
+        MoveToNewRandomPosition();
     }
-    void Update()
+
+    private void Update()
     {
+      
+       
+        HandleTankMovement();
+        HandleTurrent();
+        HandShoot();
+    }
 
-        distanceToTarget = Vector3.Distance(transform.position, targetPlayer.position);
 
-        // Call cullation angle
-        Vector3 directionToPlayer = targetPlayer.position - transform.position;
-        directionToPlayer.Normalize();
-        SmoothLookAtTarget();
-        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+    protected virtual void HandShoot()
+    {
+        float shootDistance = Vector3.Distance(Camera.main.transform.position, transform.position);
+        isShooting = (shootDistance>3 && shootDistance < shootRange);
 
-        //  check shooting range and angle
-        if (distanceToTarget >= 10 && distanceToTarget <= 30 && !isShooting && angleToPlayer < 45)
+
+        if (currentWaitTime <=0 )
         {
-            isShooting = true;
-            targetPose.position = targetPlayer.position;
-            float randomLockTime = UnityEngine.Random.Range(3.0f, 7.0f);
-            StartCoroutine(LockTargetForDuration(randomLockTime)); // Lock target for randomLockTime seconds
+            if (!isShooting) return;
+            enemyGun.Shoot(Camera.main.transform.position, spread);
+            currentWaitTime = reloadTime;
+
+            shootRange = Random.Range(7, 15);
         }
         else
         {
-            if (isShooting || isLockingTarget)
-                isShooting = false;
-            //MoveToNewRandomPosition();
+            currentWaitTime -= Time.deltaTime;
         }
 
-
-        if (!isShooting) return;
-        SmoothLookAtTarget();
-        Invoke("PowerShoot", fireRate);
-
-
+       
     }
-
-
-
-
-    IEnumerator FlyRoutine()
+    protected virtual void HandleTankMovement()
     {
-        while (true)
+
+        if (Vector3.Distance(transform.position, targetPose.position) > (minDistance - 3))
         {
-            if (currentWaitTime <= 0f && !isLockingTarget)
-            {
-
-                currentWaitTime = waitTime;
-            }
-            else
-            {
-                currentWaitTime -= Time.deltaTime;
-                currentWaitTime = Mathf.Clamp(currentWaitTime, 0, currentWaitTime);
-            }
-
-            MoveToNewRandomPosition();
-
-            yield return StartCoroutine(MoveToPosition(targetPose.position));
-
-            if (IsAttacked())
-            {
-                // shootRange = false;
-                MoveAway();
-            }
-            yield return null;
-        }
-    }
-
-    IEnumerator MoveToPosition(Vector3 position)
-    {
-        Vector3 adjustHeight = new Vector3(position.x, position.y, position.z);
-        while (Vector3.Distance(transform.position, adjustHeight) >= (minDistance - 3))
-        {
-            transform.position = Vector3.MoveTowards(transform.position, adjustHeight, moveSpeed * Time.deltaTime);
+            Vector3 wantedPositon = transform.position + (transform.forward * tankSpeed * Time.deltaTime);
+            rb.MovePosition(wantedPositon);
             SmoothLookAtTarget();
-            yield return null;
+        }
+        else
+        {
+            MoveToNewRandomPosition();
+        }
+
+
+
+    }
+    protected virtual void HandleTurrent()
+    {
+        if (turrentTranform)
+        {
+            Vector3 turrentLookDir = Camera.main.transform.position - turrentTranform.position;
+            turrentLookDir.y = 0;
+
+            finalTurrentLookDir = Vector3.Lerp(finalTurrentLookDir, turrentLookDir, Time.deltaTime * turrenLegSpeed);
+            turrentTranform.rotation = Quaternion.LookRotation(finalTurrentLookDir);
         }
     }
 
-    IEnumerator LockTargetForDuration(float duration)
+    void MoveToNewRandomPosition()
     {
-        isLockingTarget = true;
-        yield return new WaitForSeconds(duration);
-        isLockingTarget = false;
+        targetPose.position = GetRandomPositionAroundTarget();
+        targetPose.position = new Vector3(targetPose.position.x, 0, targetPose.position.z);
     }
+
+    Vector3 GetRandomPositionAroundTarget()
+    {
+
+        float distance = Random.Range(minDistance, maxDistance);
+        float angle = Random.Range(0f, 360f);
+        Vector3 randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+        return Camera.main.transform.position + randomDirection * distance;
+    }
+
 
 
     void SmoothLookAtTarget()
@@ -120,40 +126,9 @@ public class TankController : MonoBehaviour
         {
             Vector3 targetDirection = targetPose.position - transform.position;
             Quaternion toRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
-            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
+           transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, tankTrunSpeed * Time.deltaTime);
         }
     }
 
-    void MoveToNewRandomPosition()
-    {
-        targetPose.position = GetRandomPositionAroundTarget();
-        MoveToPosition(targetPose.position);
-    }
 
-    Vector3 GetRandomPositionAroundTarget()
-    {
-        flyingHeight = Random.Range(3, 7);
-        float distance = Random.Range(minDistance, maxDistance);
-        float angle = Random.Range(0f, 360f);
-        Vector3 randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
-        return targetPlayer.position + randomDirection * distance;
-    }
-
-    void PowerShoot()
-    {
-        CancelInvoke("PowerShoot");
-        _enemyGun.Shoot(targetPlayer.position, fireRate);
-    }
-
-    bool IsAttacked()
-    {
-        return Input.GetKeyDown(KeyCode.Space);
-    }
-
-    void MoveAway()
-    {
-        Vector3 awayDirection = transform.position - targetPlayer.position;
-        Vector3 awayPosition = transform.position + awayDirection.normalized * minDistance;
-
-    }
 }

@@ -1,17 +1,24 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
+
+[RequireComponent(typeof(EnemyGunScripts))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class HelicopterFlyingScript : MonoBehaviour
 {
+    [Header("Helicopter Requirment Porperties")]
     public Transform targetPlayer;
     public Transform targetPose;
-    public float flyingHeight =30f;
+    public float flyingHeight = 30f;
     public float minDistance = 10f;
     public float maxDistance = 20f;
     public float moveSpeed = 5f;
     public float rotationSpeed = 2f;
     public float waitTime = 5f; // Time to wait before moving to a new random position
     public float currentWaitTime = 0f;
+
+    [Header("Helicopter Fire Porperties")]
     public float shootRange = 15f; // Range to shoot at the target player
     public float fireRate = 0.3f;
     public float distanceToTarget;
@@ -20,7 +27,7 @@ public class HelicopterFlyingScript : MonoBehaviour
     private Vector3 randomPosition;
 
 
-     private EnemyGunScripts _enemyGun;
+    private EnemyGunScripts _enemyGun;
     private void Awake()
     {
         targetPose.transform.SetParent(null);
@@ -40,8 +47,9 @@ public class HelicopterFlyingScript : MonoBehaviour
         SmoothLookAtTarget();
         float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
+        isShooting = (distanceToTarget >= 10 && distanceToTarget <= 20 && !isShooting && angleToPlayer < 45);
         //  check shooting range and angle
-        if (distanceToTarget >= 10 && distanceToTarget <= 25 && !isShooting && angleToPlayer <45)
+        if (isShooting)
         {
             isShooting = true;
             targetPose.position = targetPlayer.position;
@@ -50,8 +58,8 @@ public class HelicopterFlyingScript : MonoBehaviour
         }
         else
         {
-            if(isShooting || isLockingTarget)
-            isShooting = false;
+            if (isShooting || isLockingTarget)
+                isShooting = false;
             //MoveToNewRandomPosition();
         }
 
@@ -59,20 +67,20 @@ public class HelicopterFlyingScript : MonoBehaviour
         if (!isShooting) return;
         SmoothLookAtTarget();
         Invoke("PowerShoot", fireRate);
-        
+
 
     }
 
 
 
 
-  IEnumerator FlyRoutine()
+    IEnumerator FlyRoutine()
     {
         while (true)
         {
             if (currentWaitTime <= 0f && !isLockingTarget)
             {
-                
+
                 currentWaitTime = waitTime;
             }
             else
@@ -81,13 +89,13 @@ public class HelicopterFlyingScript : MonoBehaviour
                 currentWaitTime = Mathf.Clamp(currentWaitTime, 0, currentWaitTime);
             }
 
-                 MoveToNewRandomPosition();
+            MoveToNewRandomPosition();
 
             yield return StartCoroutine(MoveToPosition(targetPose.position));
-      
+
             if (IsAttacked())
             {
-               // shootRange = false;
+                // shootRange = false;
                 MoveAway();
             }
             yield return null;
@@ -96,8 +104,8 @@ public class HelicopterFlyingScript : MonoBehaviour
 
     IEnumerator MoveToPosition(Vector3 position)
     {
-        Vector3  adjustHeight =  new Vector3(position.x,flyingHeight,position.z);
-        while (Vector3.Distance(transform.position, adjustHeight) >= (minDistance -3) )
+        Vector3 adjustHeight = new Vector3(position.x, flyingHeight, position.z);
+        while (Vector3.Distance(transform.position, adjustHeight) >= (minDistance - 3))
         {
             transform.position = Vector3.MoveTowards(transform.position, adjustHeight, moveSpeed * Time.deltaTime);
             SmoothLookAtTarget();
@@ -131,7 +139,7 @@ public class HelicopterFlyingScript : MonoBehaviour
 
     Vector3 GetRandomPositionAroundTarget()
     {
-        flyingHeight = Random.Range(3,7);
+        flyingHeight = Random.Range(3, 7);
         float distance = Random.Range(minDistance, maxDistance);
         float angle = Random.Range(0f, 360f);
         Vector3 randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
