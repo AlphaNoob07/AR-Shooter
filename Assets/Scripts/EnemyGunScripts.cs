@@ -5,8 +5,7 @@ using UnityEngine;
 public class EnemyGunScripts : MonoBehaviour
 {
     [SerializeField] private BulletScripts  bulletPrefab;
-    [SerializeField] private float fireRate =0.5f;
-    [SerializeField] private float shootForce = 20.0f;
+    [SerializeField] private float shootForce = 70.0f;
     [SerializeField] private int attackPointNumber = 0;
     [SerializeField] private Transform[] attackPoints;
 
@@ -25,9 +24,6 @@ public class EnemyGunScripts : MonoBehaviour
         currentBullet.transform.forward = directionWithSpread.normalized;
         // Add  force to bullets
         currentBullet.rb.AddForce(directionWithSpread.normalized * shootForce, ForceMode.Impulse);
-
-
-
         attackPointNumber++;
         if (attackPointNumber >= attackPoints.Length)
         {
