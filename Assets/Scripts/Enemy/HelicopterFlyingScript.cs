@@ -12,50 +12,65 @@ public class HelicopterFlyingScript : MonoBehaviour
     public float waitTime = 5f; // Time to wait before moving to a new random position
     public float currentWaitTime = 0f;
     public float shootRange = 15f; // Range to shoot at the target player
+    public float distanceToTarget;
     public bool isShooting = false;
     public bool isLockingTarget = false;
     private Vector3 randomPosition;
+
+
+     private EnemyGunScripts _enemyGun;
     private void Awake()
     {
         targetPose.transform.SetParent(null);
-
         StartCoroutine(FlyRoutine());
+
+        if (_enemyGun == null)
+            _enemyGun = GetComponent<EnemyGunScripts>();
     }
     void Update()
     {
-       /* // Check if it's time to move to a new random position
-        if (currentWaitTime <= 0f)
+
+        distanceToTarget = Vector3.Distance(transform.position, targetPlayer.position);
+
+        // Call cullation angle
+        Vector3 directionToPlayer = targetPlayer.position - transform.position;
+        directionToPlayer.Normalize();
+        SmoothLookAtTarget();
+        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+
+
+        if (distanceToTarget >= 15 && distanceToTarget <= 30 && !isShooting && angleToPlayer <45)
         {
-            isShooting = false;
-            MoveToNewRandomPosition();
-            currentWaitTime = waitTime;
+            isShooting = true;
+            targetPose.position = targetPlayer.position;
+            float randomLockTime = UnityEngine.Random.Range(7.0f, 15.0f);
+            StartCoroutine(LockTargetForDuration(randomLockTime)); // Lock target for randomLockTime seconds
         }
         else
         {
-            currentWaitTime -= Time.deltaTime;
+            isShooting = false;
+            MoveAway();
         }
 
 
+        if (!isShooting) return;
 
-      *//*  float distanceToTarget = Vector3.Distance(transform.position, targetPlayer.position);
-        if (isShooting && distanceToTarget >minDistance)
+  
+        SmoothLookAtTarget();
+        if (angleToPlayer < 45.0f)
         {
-            targetPose.position = targetPlayer.position;
+            Invoke("PowerShoot", waitTime);
         }
-      
-        if(!isShooting)*//*
-        SmoothLookAtTarget();*/
 
     }
 
 
 
 
-    IEnumerator FlyRoutine()
+  IEnumerator FlyRoutine()
     {
         while (true)
         {
-            // Check if it's time to move to a new random position
             if (currentWaitTime <= 0f && !isLockingTarget)
             {
                 MoveToNewRandomPosition();
@@ -63,39 +78,29 @@ public class HelicopterFlyingScript : MonoBehaviour
             }
             else
             {
-                currentWaitTime -= Time.deltaTime;
+              
+                    currentWaitTime -= Time.deltaTime;
+                
+               
             }
-
-            // Move towards the random position
             yield return StartCoroutine(MoveToPosition(targetPose.position));
-
-            // Check if the target player is within the shoot range
-            float distanceToTarget = Vector3.Distance(transform.position, targetPlayer.position);
-            if (distanceToTarget <= shootRange && !isShooting && !isLockingTarget)
-            {
-                isShooting = true;
-                PowerShoot();
-                StartCoroutine(LockTargetForDuration(30f)); // Lock target for 30 seconds
-            }
-            else if (distanceToTarget > shootRange)
+           
+           
+            /*if (distanceToTarget > shootRange)
             {
                 isShooting = false;
-            }
-
-            // Check if the helicopter is attacked (you can replace this with your actual attack detection logic)
+            }*/
             if (IsAttacked())
             {
                 MoveAway();
             }
-
-            // Wait for the next iteration
             yield return null;
         }
     }
 
     IEnumerator MoveToPosition(Vector3 position)
     {
-        while (Vector3.Distance(transform.position, position) > 0.1f)
+        while (Vector3.Distance(transform.position, position) > 15 )
         {
             // Move towards the position
             transform.position = Vector3.MoveTowards(transform.position, position, moveSpeed * Time.deltaTime);
@@ -116,10 +121,7 @@ public class HelicopterFlyingScript : MonoBehaviour
     {
         if (targetPose != null)
         {
-          //  transform.position = Vector3.Lerp(transform.position, targetPose.position, moveSpeed * Time.deltaTime);
             Vector3 targetDirection = targetPose.position - transform.position;
-
-            // Calculate the rotation to face the target
             Quaternion toRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, rotationSpeed * Time.deltaTime);
         }
@@ -147,8 +149,9 @@ public class HelicopterFlyingScript : MonoBehaviour
 
     void PowerShoot()
     {
-        // Implement power shoot logic here
-        Debug.Log("Power shoot at the target!");
+        CancelInvoke("PowerShoot");
+        Debug.Log("Shooot ");
+        _enemyGun.Shoot(targetPose.position,1.0f);
     }
 
     bool IsAttacked()

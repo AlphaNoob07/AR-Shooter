@@ -14,22 +14,6 @@ public class EnemyScripts : MonoBehaviour
 
     private void Awake()
     {
-        /* switch (enemyMode)
-         {
-             case EnemyMode.Helicopter:
-                 this.gameObject.AddComponent<HelicopterFlyingScript>();
-                 break;
-             case EnemyMode.Tank:
-                // this.gameObject.AddComponent<HelicopterFlyingScript>();
-                 break;
-
-         }
-        */
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+     
     }
 }
