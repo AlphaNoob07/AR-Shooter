@@ -7,34 +7,28 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ARController : MonoBehaviour
 {
-    private ARRaycastManager raycastManager;
-    private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    [SerializeField] private PlaceIndicator placeIndicator;
 
-    [SerializeField] private GameObject portalPose;
 
     private void Awake()
     {
-        raycastManager = FindObjectOfType<ARRaycastManager>();
-        
-        portalPose.SetActive(false); //  to set enemy 
+        placeIndicator = FindObjectOfType<PlaceIndicator>();
     }
-    // Update is called once per frame
-    void Update()
+
+    private void Update()
     {
-       
-        var ray = new Vector2(Screen.width / 2, Screen.height / 2);
-
-        if (raycastManager.Raycast(ray, hits, TrackableType.Planes))
+        if (Input.touchCount > 0)
         {
-            Pose hitPose = hits[0].pose;
+            Touch touch = Input.GetTouch(0);
 
-            portalPose.transform.position = hitPose.position;
-            portalPose.transform.rotation = hitPose.rotation;
-
-            if (!portalPose.activeInHierarchy)
+            if (touch.phase == TouchPhase.Began)
             {
-                portalPose.SetActive(true);
+                if (placeIndicator.enabled)
+                {
+                    placeIndicator.enabled = false;
+                }
             }
+
         }
     }
 }
