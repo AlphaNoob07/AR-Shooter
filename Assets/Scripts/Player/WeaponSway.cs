@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WeaponSway : MonoBehaviour
 {
-    [Header("Weapon follow & Swap Setting")]
+    [Header("Weapon Sway Setting")]
     [SerializeField] private float smooth;
     [SerializeField] private float multiplier;
     [SerializeField] private Transform target;

@@ -5,6 +5,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(EnemyGunScripts))]
 [RequireComponent(typeof(CapsuleCollider))]
+[RequireComponent(typeof(HealthScript))]
 public class HelicopterFlyingScript : MonoBehaviour
 {
     [Header("Helicopter Requirment Porperties")]
@@ -30,11 +31,18 @@ public class HelicopterFlyingScript : MonoBehaviour
     private EnemyGunScripts _enemyGun;
     private void Awake()
     {
-        targetPose.transform.SetParent(null);
-        StartCoroutine(FlyRoutine());
+        targetPlayer = Camera.main.transform;
 
+        targetPose.transform.SetParent(null);
+      
+ 
         if (_enemyGun == null)
             _enemyGun = GetComponent<EnemyGunScripts>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(FlyRoutine());
     }
     void Update()
     {
@@ -148,6 +156,7 @@ public class HelicopterFlyingScript : MonoBehaviour
 
     void PowerShoot()
     {
+        fireRate = Random.Range(0.7f, 3.0f);
         CancelInvoke("PowerShoot");
         _enemyGun.Shoot(targetPlayer.position, fireRate);
     }

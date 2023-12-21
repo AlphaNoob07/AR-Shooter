@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(EnemyGunScripts))]
 [RequireComponent(typeof(BoxCollider))]
+[RequireComponent(typeof(HealthScript))]
 public class TankController : MonoBehaviour
 {
     [Header("Tank RequireComponent Porperties")]

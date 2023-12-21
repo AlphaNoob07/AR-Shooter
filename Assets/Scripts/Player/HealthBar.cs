@@ -5,17 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 public class HealthBar : MonoBehaviour
 {
-    private TextMeshProUGUI levelTxt;
-    private Image healtSlider;
-
-
-
-    private void UpgradeInfo()
-    { 
-       
-    }
-
-
-
+   //[SerializeField] private TextMeshProUGUI levelTxt;
+     public Image healtSlider;
 
 }

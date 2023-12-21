@@ -10,10 +10,10 @@ public class PlaceIndicator : MonoBehaviour
 {
 
     [Header(" AR Porperties")]
-    private ARRaycastManager raycastManager;
-    private List<ARRaycastHit> hits = new List<ARRaycastHit>();
+    [HideInInspector] private ARRaycastManager raycastManager;
+    [HideInInspector] private List<ARRaycastHit> hits = new List<ARRaycastHit>();
 
-    private GameObject indicator;
+    [HideInInspector] public GameObject indicator;
 
     // Start is called before the first frame update
     void Start()
@@ -23,25 +23,32 @@ public class PlaceIndicator : MonoBehaviour
         indicator.SetActive(false);
 
 
-
+       
     }
 
-    // Update is called once per frame
     void Update()
     {
 
-        var ray = new Vector2(Screen.width / 2, Screen.height / 2);
+            var ray = new Vector2(Screen.width / 2, Screen.height / 2);
 
-        if (raycastManager.Raycast(ray,hits, TrackableType.Planes))
-        {
-            Pose hitPose = hits[0].pose;
-
-            transform.position = hitPose.position;
-            transform.rotation = hitPose.rotation;
-            if (!indicator.activeInHierarchy)
+            if (raycastManager.Raycast(ray, hits, TrackableType.Planes))
             {
-                indicator.SetActive(true);
+                Pose hitPose = hits[0].pose;
+                transform.position = hitPose.position;
+                transform.rotation = hitPose.rotation;
+
+                GameController.instance.gameState = GameController.GameState.findSurface;
+
+                if (!indicator.activeInHierarchy)
+                {
+                    indicator.SetActive(true);
+                }
+                else
+                {
+                    GameController.instance.gameState = GameController.GameState.placeMarker;
+                }
             }
-        }
+        
+       
     }
 }
