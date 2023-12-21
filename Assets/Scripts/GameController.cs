@@ -5,23 +5,46 @@ using UnityEngine;
 public class GameController : MonoBehaviour
 {
     public static GameController instance;
-
-    [SerializeField] EnemyScripts[] enemies;
+    public int levelNumber = 1;
 
     private void Awake()
     {
         instance = this;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
+
+    public void GenerateEnemy()
+    { 
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    private void StartGame()
+    { 
         
     }
+
+    private void LevelComplete()
+    { 
+        
+    }
+
+    private void LevelFail()
+    {
+
+    }
+
+
+    private void ReStartGame()
+    { 
+        
+    }
+
+    public void UpgradInfo()
+    { 
+        
+    }
+
+
+
+
 }
