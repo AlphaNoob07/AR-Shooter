@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(EnemyGunScripts))]
+[RequireComponent(typeof(WeaponSway))]
 public class WeponController : MonoBehaviour
 {
     [Header("Gun Scripts")]
@@ -41,22 +42,24 @@ public class WeponController : MonoBehaviour
 
     private void Update()
     {
-        
+      //  MyInput();
     }
 
-    protected void MyInput()
+    public void MyInput()
     {
         // check is allowed to holdown btn
 
-        if (allowBtnHold) shooting = Input.GetKeyDown(KeyCode.Mouse0);
-        else shooting = Input.GetKeyDown(KeyCode.Mouse0);
+/*        if (allowBtnHold) shooting = Input.GetKeyDown(KeyCode.Mouse0);
+        else shooting = Input.GetKeyDown(KeyCode.Mouse0);*/
 
         // Shooting 
 
-        if (readyToShoot && shooting && !reloading && bulletsLeft > 0)
+        if (readyToShoot)
         {
             bulletsShot = 0;
             Shoot();
+
+           
         }
     }
 
@@ -68,9 +71,49 @@ public class WeponController : MonoBehaviour
 
         // find the extract hit point from camera hit center positon 
 
-       // Ray
+        Ray ray = ARMainCamera.ViewportPointToRay(new Vector3(0.5f,0.5f, 0)); // 
+        Debug.DrawRay(ray.origin, ray.direction * 10000, Color.red, 2.0f);
+        RaycastHit hit;
 
-        bulletsLeft--;
-        bulletsShot++;
+        Vector3 targetPoint;
+        if (Physics.Raycast(ray, out hit))
+            targetPoint = hit.point;
+        else
+            targetPoint = ray.GetPoint(75);
+
+        gunScripts.Shoot(targetPoint, spread);
+
+        attackPoint.position = targetPoint;
+
+
+        if (allowInvoke)
+        {
+            Invoke("ResetShoot", timeBetweenShots);
+            allowInvoke = false;
+        }
+
+
+
+
+        // calculation direction from attackpoint to targepoint;
+        //Vector3 directionWithOutSpred = targetPoint - attackPoint.position;
+     
+        /*
+                float x = Random.Range(-spread, spread);
+                float y = Random.Range(-spread, spread);
+
+                Vector3 directionWithspread = directionWithOutSpred = new Vector3(x, y, 0);*/
+        //bulletsLeft--;
+        // bulletsShot++;
+    }
+
+    private void ResetShoot()
+    {
+        CancelInvoke("ResetShoot");
+
+        readyToShoot = true;
+        allowInvoke = true;
+
+        Debug.Log("Ready To Shoot");
     }
 }
