@@ -125,7 +125,7 @@ public class TankController : MonoBehaviour
 
 
 
-        float distance = Random.Range(15, 20);
+        float distance = Random.Range(7, 3);
         float angle = Random.Range(0f, 360f);
         Vector3 randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
 
@@ -136,9 +136,6 @@ public class TankController : MonoBehaviour
             return genarateLocation.transform.position + randomDirection * distance;
         }
 
-
-         distance = Random.Range(15, 20);
-         angle = Random.Range(0f, 360f); 
          randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
 
         // Offset the position from the AR plane

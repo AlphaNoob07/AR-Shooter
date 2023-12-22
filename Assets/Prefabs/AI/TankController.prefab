@@ -163,8 +163,8 @@ MonoBehaviour:
   turrentTarget: {fileID: 0}
   turrenLegSpeed: 0.2
   targetPose: {fileID: 6293330402023056209}
-  tankSpeed: 2
-  tankTrunSpeed: 1
+  tankSpeed: 1
+  tankTrunSpeed: 2
   maxDistance: 10
   minDistance: 30
   spread: 0
