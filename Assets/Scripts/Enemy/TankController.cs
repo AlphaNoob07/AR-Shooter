@@ -43,12 +43,15 @@ public class TankController : MonoBehaviour
         enemyGun = GetComponent<EnemyGunScripts>();
         rb = GetComponent<Rigidbody>();
         boxCollider = GetComponent<BoxCollider>();
-
+        turrentTarget = FindObjectOfType<ARController>().gameObject.transform;
         arPlaneManager = FindObjectOfType<ARPlaneManager>();
         genarateLocation = FindObjectOfType<AIGenarateLocation>();
         targetPose.SetParent(null);
 
+
         MoveToNewRandomPosition();
+
+
     }
 
     private void Update()
@@ -114,7 +117,7 @@ public class TankController : MonoBehaviour
     void MoveToNewRandomPosition()
     {
         targetPose.position = GetRandomPositionAroundTarget();
-        targetPose.position = new Vector3(targetPose.position.x,0, targetPose.position.z);
+        targetPose.position = new Vector3(targetPose.position.x, genarateLocation.transform.position.y, targetPose.position.z);
     }
     // Upgrade Scripts
     Vector3 GetRandomPositionAroundTarget()
