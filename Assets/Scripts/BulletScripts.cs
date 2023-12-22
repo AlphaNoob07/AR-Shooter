@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class BulletScripts : MonoBehaviour
 {
+    private enum BulletState { 
+        player,
+        enemy
+    }
+    [SerializeField] private BulletState bulletState = BulletState.player;
     public Rigidbody rb;
     public float lifeTime =3;
     public float damage =10;
@@ -13,16 +18,14 @@ public class BulletScripts : MonoBehaviour
 
         Destroy(gameObject, lifeTime);
     }
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-
-        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Player") && bulletState == BulletState.enemy || other.gameObject.CompareTag("Enemy") && bulletState == BulletState.player)
         {
-              collision.gameObject.GetComponent<HealthScript>().GetDamage(damage);
-            Destroy(this.gameObject, 0);
+            other.gameObject.GetComponent<HealthScript>().GetDamage(10);
         }
         Destroy(this.gameObject, 0);
     }
+   
 
 }

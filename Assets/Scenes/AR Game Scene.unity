@@ -1004,14 +1004,21 @@ MonoBehaviour:
   genarateLocation: {fileID: 0}
   enemys:
   - {fileID: 7199668555319292617, guid: a1541fc7a47ebc940a5f01234e4ac0de, type: 3}
-  - {fileID: 8227823966771005597, guid: 614477eb7001c2042b368bbd55e15ca6, type: 3}
+  - {fileID: 3340828024190562336, guid: 614477eb7001c2042b368bbd55e15ca6, type: 3}
+  - {fileID: 7199668555319292617, guid: a1541fc7a47ebc940a5f01234e4ac0de, type: 3}
+  - {fileID: 3340828024190562336, guid: 614477eb7001c2042b368bbd55e15ca6, type: 3}
+  - {fileID: 7199668555319292617, guid: a1541fc7a47ebc940a5f01234e4ac0de, type: 3}
+  - {fileID: 3340828024190562336, guid: 614477eb7001c2042b368bbd55e15ca6, type: 3}
+  enemyList: []
+  enemyListNumber: 20
   totalEnemy: 7
-  levelNumber: 1
+  currentEnemy: 0
   isSetup: 0
   mainuePanel: {fileID: 394792244}
-  winPanel: {fileID: 1367002302}
+  winPanel: {fileID: 1367002306}
   playerHanthBar: {fileID: 1839432315}
   AIHealthBar: {fileID: 976457893}
+  levelNumber: 1
   score: 0
 --- !u!1 &777862777
 GameObject:
@@ -1253,7 +1260,7 @@ GameObject:
   - component: {fileID: 982335084}
   - component: {fileID: 982335085}
   - component: {fileID: 982335086}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: ARController
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2438,9 +2445,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 982335082}
     m_Modifications:
+    - target: {fileID: 2066854758136297452, guid: e833e5783788cb0438c2633c72b90908, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2848029028647403757, guid: e833e5783788cb0438c2633c72b90908, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3071199340004710721, guid: e833e5783788cb0438c2633c72b90908, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3228495870101543511, guid: e833e5783788cb0438c2633c72b90908, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 3917549244976105800, guid: e833e5783788cb0438c2633c72b90908, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2465,6 +2484,10 @@ PrefabInstance:
     - target: {fileID: 4262780614259919305, guid: e833e5783788cb0438c2633c72b90908, type: 3}
       propertyPath: m_Name
       value: WeponHolder
+      objectReference: {fileID: 0}
+    - target: {fileID: 4262780614259919305, guid: e833e5783788cb0438c2633c72b90908, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6838049370669509002, guid: e833e5783788cb0438c2633c72b90908, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2509,6 +2532,14 @@ PrefabInstance:
     - target: {fileID: 7358500790935598917, guid: e833e5783788cb0438c2633c72b90908, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 7501819857382769359, guid: e833e5783788cb0438c2633c72b90908, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7878332693217668607, guid: e833e5783788cb0438c2633c72b90908, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 8830476971347448935, guid: e833e5783788cb0438c2633c72b90908, type: 3}
       propertyPath: attackPoint

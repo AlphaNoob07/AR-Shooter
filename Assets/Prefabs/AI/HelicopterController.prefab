@@ -13,13 +13,13 @@ GameObject:
   - component: {fileID: 2094664629322016004}
   - component: {fileID: 8050000367222580588}
   - component: {fileID: 6271285547416465186}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: HelicopterController
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3387076738022342193
 Transform:
   m_ObjectHideFlags: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9020e3a04ba53704d88990585c2fcea8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 7312593549038407846, guid: db5284734490f7047bdd8a9ed73287cd, type: 3}
+  bulletPrefab: {fileID: 7312593549038407846, guid: 21593ba169f6842478141db31f9d533a, type: 3}
   shootForce: 30
   attackPointNumber: 0
   attackPoints:
@@ -68,12 +68,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetPlayer: {fileID: 0}
   targetPose: {fileID: 4214677669554622353}
-  flyingHeight: 5
+  flyingHeight: 2
   minDistance: 15
   maxDistance: 40
   moveSpeed: 3
   rotationSpeed: 1
-  waitTime: 0.5
+  waitTime: 3
   currentWaitTime: 0
   shootRange: 20
   fireRate: 1
@@ -115,6 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e83eae0b5a52e4e9e11f311bf9ed79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageReductionSpeed: 10
 --- !u!1001 &6013653610911540829
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -123,9 +124,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3387076738022342193}
     m_Modifications:
+    - target: {fileID: 1026207620266122, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1703995414709646, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1987970773263572, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
       propertyPath: m_Name
       value: helicopter_2_body
+      objectReference: {fileID: 0}
+    - target: {fileID: 1987970773263572, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4080899850377880, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
       propertyPath: m_LocalPosition.x
@@ -166,6 +179,22 @@ PrefabInstance:
     - target: {fileID: 4080899850377880, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453882502635489588, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7090967097241934025, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7107481417637184643, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200247657947038409, guid: 9fb002ab304aa47eea89afb090bab68d, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

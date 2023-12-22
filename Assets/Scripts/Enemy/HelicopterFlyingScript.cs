@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.XR.ARFoundation;
 
 [RequireComponent(typeof(EnemyGunScripts))]
 [RequireComponent(typeof(CapsuleCollider))]
@@ -27,15 +27,18 @@ public class HelicopterFlyingScript : MonoBehaviour
     public bool isLockingTarget = false;
     private Vector3 randomPosition;
 
-
+    public AIGenarateLocation genarateLocation; //  ARPortal Postion
+    public ARPlaneManager arPlaneManager;
     private EnemyGunScripts _enemyGun;
     private void Awake()
     {
         targetPlayer = Camera.main.transform;
 
         targetPose.transform.SetParent(null);
-      
- 
+
+        arPlaneManager = FindObjectOfType<ARPlaneManager>();
+        genarateLocation = FindObjectOfType<AIGenarateLocation>();
+
         if (_enemyGun == null)
             _enemyGun = GetComponent<EnemyGunScripts>();
     }
@@ -144,15 +147,64 @@ public class HelicopterFlyingScript : MonoBehaviour
         targetPose.position = GetRandomPositionAroundTarget();
         MoveToPosition(targetPose.position);
     }
+    /*
+        Vector3 GetRandomPositionAroundTarget()
+        {
+            flyingHeight = Random.Range(1, 3);
+            float distance = Random.Range(-maxDistance, maxDistance);
+            float angle = Random.Range(0f, 360f);
+            Vector3 randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+            return targetPlayer.position + randomDirection * distance;
+        }*/
 
+
+    // Upgrade Scripts
     Vector3 GetRandomPositionAroundTarget()
     {
-        flyingHeight = Random.Range(3, 7);
-        float distance = Random.Range(minDistance, maxDistance);
+
+        /* float distance = Random.Range(-maxDistance, maxDistance);
+         float angle = Random.Range(0f, 360f);
+         Vector3 randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+         return genarateLocation.transform.position + randomDirection * distance;*/
+        flyingHeight = Random.Range(2.5f, 5.0f);
+        float distance = Random.Range(15, 20);
         float angle = Random.Range(0f, 360f);
         Vector3 randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
-        return targetPlayer.position + randomDirection * distance;
+
+        Vector3 floorPosition = GetDetectedFloorPosition();
+        if (floorPosition == Vector3.zero)
+        {
+            //Debug.LogError("No tracked planes found.");
+            return genarateLocation.transform.position + randomDirection * distance;
+        }
+
+
+        distance = Random.Range(15, 20);
+        angle = Random.Range(0f, 360f);
+        randomDirection = Quaternion.Euler(0, angle, 0) * Vector3.forward;
+
+        // Offset the position from the AR plane
+        Vector3 randomPosition = floorPosition + randomDirection * distance;
+
+        return randomPosition;
+
     }
+
+    private Vector3 GetDetectedFloorPosition()
+    {
+        //  the first one as the floor
+        foreach (var plane in arPlaneManager.trackables)
+        {
+            if (plane.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
+            {
+                return plane.transform.position;
+            }
+        }
+
+        //  fallback
+        return Vector3.zero;
+    }
+
 
     void PowerShoot()
     {
